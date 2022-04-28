@@ -1,4 +1,7 @@
-class Element:
+import time
+
+
+class List_Element:
 
     def __init__(self, value, ptr):
         self.value = value
@@ -8,48 +11,71 @@ class Element:
         return f'[{self.value}] --> {self.ptr} '
 
 
-def _next_el(el, x):
-    prev = el
-    current = el.ptr
-    if current.value > x:
-        prev.ptr = Element(x, current)
-    else:
-        if current.ptr == None:
-            current.ptr = Element(x, None)
+class List:
+
+    def next_el(self, el, x):
+        prev = el
+        current = el.ptr
+        if current.value > x:
+            prev.ptr = List_Element(x, current)
         else:
-            _next_el(current, x)
-
-
-def create_list(array):
-    head = None
-    for x in array:
-        if head == None:
-            head = Element(x, None)
-            continue
-        if head != None:
-            if head.value > x:
-                temp = head
-                head = Element(x, temp)
+            if current.ptr == None:
+                current.ptr = List_Element(x, None)
             else:
-                if head.ptr == None:
-                    temp = Element(x, None)
-                    head.ptr = temp
+                self.next_el(current, x)
+
+    def create_list(self, array):
+        head = None
+        for x in array:
+            if head == None:
+                head = List_Element(x, None)
+                continue
+            if head != None:
+                if head.value > x:
+                    temp = head
+                    head = List_Element(x, temp)
                 else:
-                    _next_el(head, x)
-    return head
+                    if head.ptr == None:
+                        temp = List_Element(x, None)
+                        head.ptr = temp
+                    else:
+                        self.next_el(head, x)
+        return head
+
+    def find_all_list_elements(self, list_head):
+        temp = list_head
+        array = []
+        while (temp != None):
+            array.append(temp.value)
+            temp = temp.ptr
+        return array
+
+    def remove_list_elements(self, list_head):
+        temp = list_head
+        while (temp != None):
+            list_head = None
+            temp = temp.ptr
 
 
-def search_all_elements(list_head):
-    temp = list_head
-    temp_array = []
-    while (temp != None):
-        temp_array.append(temp.value)
-        temp = temp.ptr
-    return temp_array
+def test_list(A):
+    array = A[:]
+    print('Creating List')
+    start = time.time()
+    list = List()
+    list_head = list.create_list(array)
+    end = time.time()
+    creation_time = end - start
 
+    print('Searching List Elements')
+    start = time.time()
+    list.find_all_list_elements(list_head)
+    end = time.time()
+    searching_time = end - start
 
-def remove_list_elements(list_head):
-    temp = list_head
-    while (temp != None):
-        list_head = None
-        temp = temp.ptr
+    print('Removing List Elements')
+    start = time.time()
+    list.remove_list_elements(list_head)
+    end = time.time()
+    removing_time = end - start
+
+    return creation_time, searching_time, removing_time
